@@ -226,16 +226,25 @@ function DoubanPageClient() {
   // 处理选择器变化
   const handlePrimaryChange = useCallback(
     (value: string) => {
-      setLoading(true);
-      setPrimarySelection(value);
+      // 只有当值真正改变时才设置loading状态
+      if (value !== primarySelection) {
+        setLoading(true);
+        setPrimarySelection(value);
+      }
     },
-    [type]
+    [primarySelection]
   );
 
-  const handleSecondaryChange = useCallback((value: string) => {
-    setLoading(true);
-    setSecondarySelection(value);
-  }, []);
+  const handleSecondaryChange = useCallback(
+    (value: string) => {
+      // 只有当值真正改变时才设置loading状态
+      if (value !== secondarySelection) {
+        setLoading(true);
+        setSecondarySelection(value);
+      }
+    },
+    [secondarySelection]
+  );
 
   const getPageTitle = () => {
     // 根据 type 生成标题
@@ -255,13 +264,13 @@ function DoubanPageClient() {
     <PageLayout activePath={getActivePath()}>
       <div className='px-4 sm:px-10 py-4 sm:py-8 overflow-visible'>
         {/* 页面标题和选择器 */}
-        <div className='mb-8 space-y-6'>
+        <div className='mb-6 sm:mb-8 space-y-4 sm:space-y-6'>
           {/* 页面标题 */}
           <div>
-            <h1 className='text-3xl font-bold text-gray-800 mb-2 dark:text-gray-200'>
+            <h1 className='text-2xl sm:text-3xl font-bold text-gray-800 mb-1 sm:mb-2 dark:text-gray-200'>
               {getPageTitle()}
             </h1>
-            <p className='text-gray-600 dark:text-gray-400'>
+            <p className='text-sm sm:text-base text-gray-600 dark:text-gray-400'>
               来自豆瓣的精选内容
             </p>
           </div>
@@ -294,6 +303,8 @@ function DoubanPageClient() {
                       poster={item.poster}
                       douban_id={item.id}
                       rate={item.rate}
+                      year={item.year}
+                      type={type === 'movie' ? 'movie' : ''} // 电影类型严格控制，tv 不控
                     />
                   </div>
                 ))}
